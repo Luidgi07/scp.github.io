@@ -329,7 +329,8 @@
               <th>Competição</th>
               <th>Data</th>
               <th>Marca / tempo</th>
-              <th>Classificação</th>
+              <th>Classificação geral</th>
+              <th>Escalão / classificação</th>
               <th>Tipo</th>
               <th>Ações</th>
             </tr>
@@ -397,8 +398,16 @@
           <input id="time" required placeholder="Ex.: 00:58.42">
         </div>
         <div class="field">
-          <label for="place">Classificação (opcional)</label>
-          <input id="place" placeholder="Ex.: 3.º lugar">
+          <label for="place">Classificação geral</label>
+          <input id="place" placeholder="Ex.: 5.º lugar">
+        </div>
+        <div class="field">
+          <label for="ageGroup">Escalão</label>
+          <input id="ageGroup" placeholder="Ex.: Juvenis A">
+        </div>
+        <div class="field">
+          <label for="ageGroupPlace">Classificação no escalão</label>
+          <input id="ageGroupPlace" placeholder="Ex.: 2.º lugar">
         </div>
         <div class="field">
           <label for="season">Ano</label>
@@ -522,7 +531,39 @@ function openResultModal(item = null) {
   $('resultModalTitle').textContent = item ? 'Editar resultado' : 'Adicionar resultado';
   $('saveResult').textContent = item ? 'Guardar alterações' : 'Guardar resultado';
 
+  $('resultForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+
+  if(!isAdmin()){
+    alert('Inicia sessão com a conta autorizada.');
+    return;
+  }
+
+  const r={
+    kind:$('kind').value,
+    distance:$('distance').value.trim(),
+    meet:$('meet').value.trim(),
+    date:$('date').value,
+    time:$('time').value.trim(),
+    overall_place:$('place').value.trim()||null,
+    age_group:$('ageGroup').value.trim()||null,
+    age_group_place:$('ageGroupPlace').value.trim()||null,
+    season:Number($('season').value)
+  };
+
+  const {error}=await db.from('swim_results').insert(r);
+
+  if(error){
+    alert('Erro ao guardar. Confirma as colunas da tabela no Supabase.');
+    console.error(error);
+    return;
+  }
+
   $('resultForm').reset();
+  $('season').value=new Date().getFullYear();
+  closeModal();
+  await loadResults();
+});
   $('kind').value = item?.kind || 'pool';
   $('distance').value = item?.distance || '';
   $('meet').value = item?.meet || '';
