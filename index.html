@@ -610,27 +610,19 @@ function render() {
     return matchesKind && matchesSearch && matchesYear;
   });
 
-  $('rows').innerHTML = filtered.map(r => `
-    <tr>
-      <td>
-        <div class="event">${escapeHtml(r.distance)}</div>
-        <div class="sub">${labelKind(r.kind)}</div>
-      </td>
-      <td>${escapeHtml(r.meet)}</td>
-      <td>${formatDate(r.date)}</td>
-      <td class="time">${escapeHtml(r.time)}</td>
-      <td>${r.place ? `<span class="tag">${escapeHtml(r.place)}</span>` : '—'}</td>
-      <td><span class="tag">${r.kind === 'pool' ? 'Piscina' : 'Águas abertas'}</span></td>
-      <td>
-        ${isAdmin() ? `
-          <div class="actions">
-            <button class="small-btn" data-edit="${escapeHtml(r.id)}" type="button">Editar</button>
-            <button class="small-btn delete" data-delete="${escapeHtml(r.id)}" type="button">Apagar</button>
-          </div>
-        ` : '—'}
-      </td>
-    </tr>
-  `).join('');
+    const record = {
+      kind: $('kind').value,
+      distance: $('distance').value.trim(),
+      meet: $('meet').value.trim(),
+      date: $('date').value,
+      time: $('time').value.trim(),
+    
+      overall_place: $('place').value.trim() || null,
+      age_group: $('ageGroup').value.trim() || null,
+      age_group_place: $('ageGroupPlace').value.trim() || null,
+    
+      season: Number($('season').value)
+    };
 
   $('empty').hidden = filtered.length > 0;
   $('resultCount').textContent = `${filtered.length} resultado${filtered.length === 1 ? '' : 's'}`;
