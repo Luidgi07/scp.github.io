@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sporting CP | Resultados de Natação</title>
+<style>
+:root {
+  --green: #08783e;
+  --dark: #064b2b;
+  --lime: #c6f36b;
+  --bg: #f5f7f3;
+  --card: #fff;
+  --text: #142019;
+  --muted: #65736a;
+  --line: #e1e8e1;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+header {
+  padding: 36px 6%;
+  color: white;
+  background: linear-gradient(125deg, #053f25, #08783e);
+}
+.brand { font-weight: bold; letter-spacing: 2px; }
+header h1 { font-size: clamp(32px, 5vw, 54px); margin: 36px 0 12px; }
+header p { line-height: 1.6; max-width: 620px; }
+main { max-width: 1150px; padding: 28px 20px; margin: auto; }
+.section-head, .toolbar {
+  display: flex; justify-content: space-between;
+  align-items: center; gap: 12px; flex-wrap: wrap;
+}
+button, input, select { font: inherit; }
+button {
+  cursor: pointer; border: 0; border-radius: 9px;
+  padding: 11px 15px; font-weight: bold;
+}
+.primary { background: var(--lime); color: #15301b; }
+.secondary { background: white; border: 1px solid var(--line); }
+.delete-btn {
+  background: transparent; color: #c33;
+  border: 1px solid #c33; padding: 7px 10px;
+}
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin: 22px 0 32px;
+}
+.stat, .tablebox, .panel {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; padding: 18px;
+}
+.stat .label { color: var(--muted); font-size: 13px; }
+.stat .number { font-size: 30px; font-weight: bold; margin-top: 8px; }
+.toolbar { margin: 16px 0; }
+input, select {
+  padding: 11px; border: 1px solid var(--line);
+  border-radius: 9px; background: white; min-width: 0;
+}
+#search { flex: 1; }
+.tablebox { padding: 0; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 760px; }
+th {
+  background: #eaf4ec; text-align: left;
+  font-size: 11px; color: var(--muted);
+  text-transform: uppercase; padding: 14px;
+}
+td { padding: 14px; border-top: 1px solid var(--line); }
+.empty { padding: 28px; text-align: center; color: var(--muted); }
+.bottom { margin-top: 24px; }
+.note { color: var(--muted); line-height: 1.6; font-size: 13px; }
+.modal-back {
+  display: none; position: fixed; inset: 0; z-index: 5;
+  background: #0009; padding: 18px;
+  align-items: center; justify-content: center;
+}
+.modal-back.open { display: flex; }
+.modal {
+  background: white; border-radius: 16px; padding: 22px;
+  width: min(560px, 100%); max-height: 90vh; overflow: auto;
+}
+.formgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; font-weight: bold; }
+.field input, .field select { width: 100%; }
+.full { grid-column: 1 / -1; }
+.form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+footer { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; }
+@media(max-width:700px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .formgrid { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">SPORTING CP · NATAÇÃO</div>
+  <h1>Resultados que<br>marcam o ritmo.</h1>
+  <p>O meu percurso na natação pura e nas águas abertas.
+  Tempos, provas e evolução — braçada a braçada.</p>
+</header>
+
+<main>
+  <div class="section-head">
+    <div>
+      <h2>O meu desempenho</h2>
+      <p class="note">Resumo dos resultados registados</p>
+    </div>
+    <button class="primary" id="addTop">＋ Adicionar resultado</button>
+  </div>
+
+  <section class="stats">
+    <article class="stat"><div class="label">Provas registadas</div><div class="number" id="statCount">0</div></article>
+    <article class="stat"><div class="label">Melhor marca em piscina</div><div class="number" id="statPool">—</div></article>
+    <article class="stat"><div class="label">Águas abertas</div><div class="number" id="statOpen">0</div></article>
+    <article class="stat"><div class="label">Pódios</div><div class="number" id="statPodium">0</div></article>
+  </section>
+
+  <div class="section-head">
+    <h2>Resultados</h2>
+    <span id="resultCount" class="note"></span>
+  </div>
+
+  <div class="toolbar">
+    <input id="search" placeholder="Pesquisar prova ou competição…">
+    <select id="kindFilter">
+      <option value="all">Todas as disciplinas</option>
+      <option value="pool">Natação pura</option>
+      <option value="open">Águas abertas</option>
+    </select>
+    <select id="year">
+      <option value="all">Todos os anos</option>
+    </select>
+    <button class="secondary" id="export">Exportar CSV ↓</button>
+  </div>
+
+  <div class="tablebox">
+    <table>
+      <thead>
+        <tr>
+          <th>Prova / distância</th><th>Competição</th>
+          <th>Data</th><th>Marca / tempo</th>
+          <th>Classificação</th><th>Tipo</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty">Ainda não tens resultados registados. Adiciona a tua primeira prova!</div>
+  </div>
+
+  <section class="panel bottom">
+    <h3>Sobre este registo</h3>
+    <p class="note">Um registo pessoal dos teus resultados de natação pura e águas abertas. Os dados ficam guardados neste navegador.</p>
+  </section>
+</main>
+
+<footer>SPORTING CP · NATAÇÃO · Modelo pessoal não oficial</footer>
+
+<div class="modal-back" id="modal">
+  <div class="modal">
+    <div class="section-head">
+      <h2 id="modalTitle">Adicionar resultado</h2>
+      <button class="secondary" id="closeModal">✕</button>
+    </div>
+    <form id="resultForm">
+      <div class="formgrid">
+        <div class="field">
+          <label for="kind">Disciplina</label>
+          <select id="kind">
+            <option value="pool">Natação pura</option>
+            <option value="open">Águas abertas</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="distance">Distância / prova</label>
+          <input id="distance" required placeholder="Ex.: 100 m livres">
+        </div>
+        <div class="field full">
+          <label for="meet">Competição</label>
+          <input id="meet" required placeholder="Nome da competição">
+        </div>
+        <div class="field">
+          <label for="date">Data</label>
+          <input id="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="time">Marca / tempo</label>
+          <input id="time" required placeholder="Ex.: 00:58.42">
+        </div>
+        <div class="field">
+          <label for="place">Classificação (opcional)</label>
+          <input id="place" placeholder="Ex.: 3.º lugar">
+        </div>
+        <div class="field">
+          <label for="season">Ano</label>
+          <input id="season" type="number" min="2000" max="2100" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="secondary" id="cancel">Cancelar</button>
+        <button type="submit" class="primary">Guardar resultado</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'sportingSwimResults';
+let results = [];
+let editingId = null;
+
+try {
+  results = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+} catch (e) {
+  results = [];
+}
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;',
+    '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+}
+
+function formatDate(date) {
+  if (!date) return '—';
+  const [year, month, day] = date.split('-');
+  return `${day}/${month}/${year}`;
+}
+
+function render() {
+  const query = $('search').value.toLocaleLowerCase('pt-PT');
+  const kind = $('kindFilter').value;
+  const year = $('year').value;
+
+  const filtered = results.filter(r =>
+    (kind === 'all' || r.kind === kind) &&
+    (year === 'all' || String(r.season) === year) &&
+    `${r.distance} ${r.meet} ${r.place || ''}`
+      .toLocaleLowerCase('pt-PT').includes(query)
+  ).sort((a, b) => b.date.localeCompare(a.date));
+
+  $('rows').innerHTML = filtered.map(r => `
+    <tr>
+      <td><strong>${escapeHTML(r.distance)}</strong></td>
+      <td>${escapeHTML(r.meet)}</td>
+      <td>${formatDate(r.date)}</td>
+      <td><strong>${escapeHTML(r.time)}</strong></td>
+      <td>${escapeHTML(r.place || '—')}</td>
+      <td>${r.kind === 'pool' ? 'Piscina' : 'Águas abertas'}</td>
+      <td><button class="delete-btn" data-delete="${r.id}">Excluir</button></td>
+    </tr>
+  `).join('');
+
+  $('empty').hidden = filtered.length > 0;
+  $('resultCount').textContent =
+    `${filtered.length} resultado${filtered.length === 1 ? '' : 's'}`;
+
+  $('statCount').textContent = results.length;
+  $('statOpen').textContent = results.filter(r => r.kind === 'open').length;
+  $('statPodium').textContent = results.filter(r =>
+    /1.º|2.º|3.º|1o|2o|3o/i.test(r.place || '')
+  ).length;
+
+  const pool = results.filter(r =>
+    r.kind === 'pool' && /50\s*m?\s*livres/i.test(r.distance)
+  ).sort((a, b) => a.time.localeCompare(b.time));
+
+  $('statPool').textContent = pool.length ? pool[0].time : '—';
+
+  const selectedYear = $('year').value;
+  const years = [...new Set(results.map(r => String(r.season)))].sort().reverse();
+  $('year').innerHTML = '<option value="all">Todos os anos</option>' +
+    years.map(y => `<option value="${y}">${y}</option>`).join('');
+  $('year').value = years.includes(selectedYear) ? selectedYear : 'all';
+}
+
+function openModal() {
+  editingId = null;
+  $('resultForm').reset();
+  $('modalTitle').textContent = 'Adicionar resultado';
+  $('season').value = new Date().getFullYear();
+  $('modal').classList.add('open');
+}
+
+function closeModal() {
+  $('modal').classList.remove('open');
+}
+
+$('addTop').addEventListener('click', openModal);
+$('closeModal').addEventListener('click', closeModal);
+$('cancel').addEventListener('click', closeModal);
+$('search').addEventListener('input', render);
+$('kindFilter').addEventListener('change', render);
+$('year').addEventListener('change', render);
+
+$('resultForm').addEventListener('submit', event => {
+  event.preventDefault();
+
+  const result = {
+    id: Date.now(),
+    kind: $('kind').value,
+    distance: $('distance').value.trim(),
+    meet: $('meet').value.trim(),
+    date: $('date').value,
+    time: $('time').value.trim(),
+    place: $('place').value.trim(),
+    season: Number($('season').value)
+  };
+
+  results.push(result);
+  save();
+  closeModal();
+  render();
+});
+
+$('rows').addEventListener('click', event => {
+  const button = event.target.closest('[data-delete]');
+  if (!button) return;
+
+  const id = Number(button.dataset.delete);
+  const result = results.find(r => r.id === id);
+  if (!result) return;
+
+  if (!confirm(`Queres mesmo excluir "${result.distance}" — ${result.meet}?`)) return;
+
+  results = results.filter(r => r.id !== id);
+  save();
+  render();
+});
+
+$('export').addEventListener('click', () => {
+  const columns = ['Disciplina', 'Prova', 'Competição', 'Data', 'Marca', 'Classificação', 'Ano'];
+  const rows = [
+    columns,
+    ...results.map(r => [
+      r.kind === 'pool' ? 'Natação pura' : 'Águas abertas',
+      r.distance, r.meet, r.date, r.time, r.place || '', r.season
+    ])
+  ];
+
+  const csv = '\ufeff' + rows.map(row =>
+    row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(';')
+  ).join('\r\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'resultados-natacao.csv';
+  link.click();
+  URL.revokeObjectURL(url);
+});
+
+render();
+</script>
+</body>
+</html>
