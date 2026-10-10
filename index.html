@@ -1,1150 +1,952 @@
-```html
+
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sporting Natação | Resultados</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <meta name="description" content="Resultados pessoais de natação pura e águas abertas.">
   <style>
     :root {
-      --green: #008542;
-      --dark-green: #006b35;
-      --light-green: #e8f5ed;
-      --bg: #f4f7f5;
-      --white: #fff;
-      --text: #18231d;
-      --muted: #718078;
-      --border: #e0e8e2;
-      --red: #d93030;
-      --shadow: 0 5px 22px rgba(18, 48, 30, .07);
+      color-scheme: light;
+      --green: #08783e;
+      --deep: #064b2b;
+      --lime: #c6f36b;
+      --paper: #f5f7f3;
+      --surface: #fff;
+      --ink: #142019;
+      --muted: #65736a;
+      --line: #e1e8e1;
+      --soft: #eaf4ec;
+      --danger: #bd3434;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    header {
-      background: var(--green);
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .hero {
       color: white;
-      padding: 28px 20px;
+      background: linear-gradient(125deg, #053f25, #08783e 65%, #159653);
+      padding: 26px max(22px, calc((100vw - 1160px) / 2)) 38px;
     }
 
-    .header-inner {
-      max-width: 1200px;
-      margin: auto;
+    .top, .brand, .hero-bottom, .section-head, .toolbar,
+    .tabs, .form-actions, .modal-head {
       display: flex;
       align-items: center;
+      gap: 12px;
+    }
+
+    .top, .section-head, .modal-head {
       justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
     }
 
-    .brand {
-      font-size: 25px;
+    .brand { font-weight: 850; }
+    .hero:after { display: none; }
+
+    .crest {
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
+    }
+
+    .crest img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .eyebrow {
+      color: #d8f6b6;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: -.5px;
+      letter-spacing: .14em;
     }
 
-    .brand span {
-      display: block;
-      margin-top: 6px;
-      font-size: 13px;
-      font-weight: 400;
-      opacity: .9;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    h1 {
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.04;
+      letter-spacing: -.045em;
+      margin: 34px 0 12px;
     }
 
-    button, input, select {
-      font: inherit;
-    }
+    .hero p { max-width: 620px; line-height: 1.6; color: #e0f0e5; }
+    .hero-bottom { flex-wrap: wrap; margin-top: 22px; }
 
-    button {
-      cursor: pointer;
-      border: 0;
-      border-radius: 9px;
-      padding: 11px 16px;
+    .pill {
+      border: 1px solid #ffffff44;
+      background: #ffffff13;
+      padding: 9px 13px;
+      border-radius: 999px;
+      font-size: 12px;
       font-weight: 700;
-      transition: .2s;
     }
 
-    button:hover {
-      filter: brightness(.95);
-      transform: translateY(-1px);
-    }
-
-    .btn-white {
-      color: var(--green);
-      background: white;
-    }
-
-    .btn-primary {
-      background: var(--green);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #edf2ee;
-      color: var(--text);
-    }
-
-    .btn-danger {
-      background: #fff0f0;
-      color: var(--red);
-    }
-
-    main {
-      max-width: 1200px;
-      padding: 28px 20px 50px;
-      margin: auto;
-    }
-
-    .intro {
-      margin-bottom: 24px;
-    }
-
-    .intro h1 {
-      font-size: 27px;
-      margin: 0 0 8px;
-    }
-
-    .intro p {
-      color: var(--muted);
-      margin: 0;
-      line-height: 1.5;
-    }
+    .wrap { max-width: 1160px; margin: auto; padding: 28px 22px 54px; }
+    .section-head { margin-bottom: 16px; flex-wrap: wrap; }
+    h2 { font-size: 23px; margin: 0; letter-spacing: -.03em; }
+    h3 { margin-top: 0; }
+    .muted, .tiny { color: var(--muted); font-size: 12px; margin-top: 5px; }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      gap: 13px;
+      margin-bottom: 30px;
     }
 
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 21px;
-      box-shadow: var(--shadow);
+    .stat, .panel, .tablebox, .modal {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
     }
 
-    .stat-label {
+    .stat { padding: 18px; }
+    .stat .label { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .stat .number { font-size: 30px; font-weight: 850; margin: 8px 0; }
+    .stat .foot { font-size: 11px; color: var(--green); }
+
+    .tabs { flex-wrap: wrap; margin-bottom: 16px; }
+
+    .tab, .btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
       font-size: 13px;
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 13px;
+      font-weight: 750;
     }
 
-    .stat-number {
-      font-size: 34px;
-      line-height: 1;
-      font-weight: 800;
-      color: var(--green);
-    }
+    .tab { background: white; color: var(--muted); }
+    .tab.active { background: var(--deep); color: white; border-color: var(--deep); }
+    .btn { background: var(--lime); color: #15301b; border: 0; }
+    .btn.secondary { background: white; color: var(--ink); border: 1px solid var(--line); }
+    .btn.danger { background: #fff0f0; color: var(--danger); border: 1px solid #f0caca; }
+    .btn:disabled { opacity: .55; cursor: wait; }
 
-    .stat-note {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 10px;
-    }
+    .toolbar { flex-wrap: wrap; margin-bottom: 15px; }
+    .filter { display: flex; flex: 1; min-width: 230px; gap: 9px; }
 
-    .section {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      box-shadow: var(--shadow);
-      margin-bottom: 22px;
-      overflow: hidden;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-
-    .section-header h2 {
-      font-size: 18px;
-      margin: 0;
-    }
-
-    .filters {
-      padding: 18px 20px;
-      display: grid;
-      grid-template-columns: 1fr 180px 180px;
-      gap: 12px;
-    }
-
-    input, select {
+    .filter input, .filter select, .field input, .field select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
+      min-width: 0;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
       border-radius: 9px;
-      outline: none;
       background: white;
-      color: var(--text);
+      color: var(--ink);
     }
 
-    input:focus, select:focus {
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(0, 133, 66, .1);
-    }
-
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      white-space: nowrap;
-    }
+    .tablebox { overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
 
     th {
-      background: #f7faf8;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      font-size: 11px;
       text-align: left;
-      padding: 14px 16px;
-    }
-
-    td {
-      padding: 16px;
-      border-top: 1px solid var(--border);
-      font-size: 13px;
-    }
-
-    tbody tr:hover {
-      background: #fafcfb;
-    }
-
-    .event {
-      font-weight: 800;
-    }
-
-    .sub {
-      margin-top: 5px;
-      font-size: 11px;
+      background: var(--soft);
       color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 14px;
     }
 
-    .time {
-      font-weight: 800;
-      color: var(--green);
-    }
+    td { padding: 14px; border-top: 1px solid var(--line); font-size: 13px; }
+    tbody tr:hover { background: #f7fbf7; }
+    .event { font-weight: 800; }
+    .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .time { font-weight: 850; font-variant-numeric: tabular-nums; }
 
     .tag {
       display: inline-block;
-      background: var(--light-green);
-      color: var(--dark-green);
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .podium {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 30px;
-      padding: 6px 9px;
-      border-radius: 7px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--green);
+      font-size: 10px;
       font-weight: 800;
-      background: #edf2ee;
-      color: #58665d;
     }
 
-    .podium.first {
-      color: #765300;
-      background: #fff1b9;
-    }
-
-    .podium.second {
-      color: #4d5966;
-      background: #e7edf2;
-    }
-
-    .podium.third {
-      color: #89552f;
-      background: #f7e4d5;
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-    }
+    .actions { display: flex; gap: 6px; }
 
     .small-btn {
-      padding: 7px 9px;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: white;
       font-size: 11px;
-      background: #edf2ee;
+      font-weight: 750;
     }
 
-    .small-btn.delete {
-      background: #fff0f0;
-      color: var(--red);
-    }
+    .small-btn.delete { color: var(--danger); border-color: #edcaca; }
+    .empty { text-align: center; padding: 30px; color: var(--muted); }
+    [hidden] { display: none !important; }
 
-    .empty {
+    .bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    .panel { padding: 20px; }
+    .note { font-size: 12px; line-height: 1.65; color: var(--muted); }
+    .progress-row { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; margin: 15px 0 8px; }
+    .track { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+    .bar { height: 100%; background: var(--green); width: 0; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 22px;
       text-align: center;
-      padding: 45px 20px;
       color: var(--muted);
-      white-space: normal;
-      line-height: 1.6;
+      font-size: 11px;
+      line-height: 1.8;
     }
 
-    .status {
-      padding: 12px 16px;
-      font-size: 13px;
-      border-radius: 9px;
-      margin-bottom: 18px;
-      display: none;
-    }
-
-    .status.success {
-      display: block;
-      background: #e6f6eb;
-      color: #176b36;
-    }
-
-    .status.error {
-      display: block;
-      background: #fff0f0;
-      color: #a51f1f;
-    }
-
-    .status.info {
-      display: block;
-      background: #edf4ff;
-      color: #28568c;
-    }
-
-    .modal {
-      display: none;
+    .modal-back {
       position: fixed;
       inset: 0;
       z-index: 10;
-      background: rgba(10, 25, 15, .55);
-      padding: 20px;
+      display: none;
       align-items: center;
       justify-content: center;
-      overflow-y: auto;
+      padding: 18px;
+      background: #0009;
     }
 
-    .modal.open {
-      display: flex;
-    }
+    .modal-back.open { display: flex; }
 
-    .modal-content {
-      width: 100%;
-      max-width: 650px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 20px 70px rgba(0, 0, 0, .2);
-      overflow: hidden;
-      margin: auto;
-    }
-
-    .modal-header {
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 19px;
-    }
-
-    .modal-body {
+    .modal {
+      width: min(560px, 100%);
+      max-height: 90vh;
+      overflow: auto;
       padding: 22px;
+      box-shadow: 0 25px 80px #0005;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+    .modal-head { margin-bottom: 18px; }
+    .modal-head h2 { font-size: 20px; }
+    .close { border: 0; border-radius: 8px; padding: 8px 11px; background: var(--soft); }
+    .formgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: var(--muted); font-size: 12px; font-weight: 750; }
+    .form-actions { justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+    #status { margin: 12px 0; font-size: 13px; color: var(--muted); }
+    #status.error { color: var(--danger); }
+    #status.success { color: var(--green); }
+
+    @media (max-width: 760px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .bottom { grid-template-columns: 1fr; }
+      .hero { padding-top: 22px; }
+      .section-head { align-items: flex-start; }
     }
 
-    .field {
-      min-width: 0;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    .field label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 7px;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .auth-box {
-      padding: 20px;
-      background: #f7faf8;
-      border-top: 1px solid var(--border);
-    }
-
-    .auth-box p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .auth-fields {
-      display: flex;
-      gap: 10px;
-    }
-
-    footer {
-      padding: 22px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    @media (max-width: 800px) {
-      .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .filters {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .filters input {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (max-width: 500px) {
-      header {
-        padding: 22px 16px;
-      }
-
-      main {
-        padding: 22px 12px 35px;
-      }
-
-      .stats {
-        gap: 10px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-number {
-        font-size: 28px;
-      }
-
-      .filters, .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .field.full {
-        grid-column: auto;
-      }
-
-      .auth-fields {
-        flex-direction: column;
-      }
-
-      .section-header {
-        align-items: flex-start;
-      }
+    @media (max-width: 440px) {
+      .formgrid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .brand { font-size: 12px; }
+      .eyebrow { font-size: 9px; }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="header-inner">
+<div id="app">
+  <header class="hero">
+    <div class="top">
       <div class="brand">
-        SPORTING NATAÇÃO
-        <span>Resultados e classificações</span>
+        <div class="crest"><img src="https://assets.football-logos.cc/logos/portugal/512x512/sporting-cp.3a9545a0.png" alt="Logo do Sporting CP"></div>
+        <span>SPORTING CP <span style="font-weight:450;color:#d8f6b6">· NATAÇÃO</span></span>
       </div>
-      <div>
-        <button class="btn-white" id="loginToggle">Área de administrador</button>
-        <button class="btn-white" id="logoutBtn" hidden>Terminar sessão</button>
-      </div>
+      <span class="eyebrow">ÉPOCA 2026 / 2027</span>
+    </div>
+    <h1>Resultados que<br>marcam o ritmo.</h1>
+    <p>O meu percurso na natação pura e nas águas abertas. Tempos, provas e evolução — braçada a braçada, sempre com ambição.</p>
+    <div class="hero-bottom">
+      <span class="pill">🏊 Natação pura</span>
+      <span class="pill">🌊 Águas abertas</span>
+      <span class="pill">🟢 Sporting CP</span>
     </div>
   </header>
 
-  <main>
-    <div class="intro">
-      <h1>Resultados de Natação</h1>
-      <p>Consulta os resultados, tempos e classificações dos atletas.</p>
+  <main class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>O meu desempenho</h2>
+        <div class="muted">Resumo dos resultados registados</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn secondary" id="loginBtn">Iniciar sessão</button>
+        <button class="btn" id="addTop" hidden>＋ Adicionar resultado</button>
+      </div>
     </div>
 
-    <div id="status" class="status" role="status" aria-live="polite"></div>
+    <div id="status" role="status">A ligar ao Supabase…</div>
 
     <section class="stats">
-      <div class="stat-card">
-        <div class="stat-label">Total de resultados</div>
-        <div class="stat-number" id="statResults">0</div>
-        <div class="stat-note">Resultados registados</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Pódios gerais</div>
-        <div class="stat-number" id="statGeneralPodiums">0</div>
-        <div class="stat-note">1.º, 2.º ou 3.º lugar geral</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Pódios de escalão</div>
-        <div class="stat-number" id="statAgePodiums">0</div>
-        <div class="stat-note">1.º, 2.º ou 3.º lugar no escalão</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Total de pódios</div>
-        <div class="stat-number" id="statTotalPodiums">0</div>
-        <div class="stat-note">Pódios gerais + pódios de escalão</div>
-      </div>
+      <article class="stat">
+        <div class="label">Provas registadas</div>
+        <div class="number" id="statCount">0</div>
+        <div class="foot">Total de resultados</div>
+      </article>
+      <article class="stat">
+        <div class="label">Melhor marca em piscina</div>
+        <div class="number" id="statPool">—</div>
+        <div class="foot">50 m livres, se registado</div>
+      </article>
+      <article class="stat">
+        <div class="label">Provas de águas abertas</div>
+        <div class="number" id="statOpen">0</div>
+        <div class="foot">Resultados registados</div>
+      </article>
+      <article class="stat">
+        <div class="label">Pódios</div>
+        <div class="number" id="statPodium">0</div>
+        <div class="foot">Classificações 1.º, 2.º ou 3.º</div>
+      </article>
     </section>
 
-    <section class="section">
-      <div class="section-header">
-        <h2>Resultados registados</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-secondary" id="exportBtn">Exportar CSV</button>
-          <button class="btn-primary" id="addBtn" hidden>+ Adicionar resultado</button>
-        </div>
+    <div class="section-head">
+      <div>
+        <h2>Resultados</h2>
+        <div class="muted">Filtra por disciplina, prova ou competição.</div>
       </div>
+      <span class="tiny" id="resultCount">0 resultados</span>
+    </div>
 
-      <div class="filters">
-        <input type="search" id="search" placeholder="Pesquisar prova, competição ou escalão...">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-kind="all">Todos</button>
+      <button class="tab" data-kind="pool">Natação pura</button>
+      <button class="tab" data-kind="open">Águas abertas</button>
+    </div>
 
-        <select id="yearFilter">
-          <option value="">Todas as épocas</option>
-        </select>
-
-        <select id="kindFilter">
-          <option value="">Todas as categorias</option>
-          <option value="Piscina curta">Piscina curta</option>
-          <option value="Piscina longa">Piscina longa</option>
-          <option value="Águas abertas">Águas abertas</option>
+    <div class="toolbar">
+      <div class="filter">
+        <input id="search" placeholder="Pesquisar prova ou competição…" aria-label="Pesquisar resultados">
+        <select id="year" aria-label="Filtrar por ano">
+          <option value="all">Todos os anos</option>
         </select>
       </div>
+      <button class="btn secondary" id="export">Exportar CSV ↓</button>
+    </div>
 
-      <div class="table-wrap">
+    <div class="tablebox">
+      <div class="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Prova</th>
+              <th>Prova / distância</th>
               <th>Competição</th>
               <th>Data</th>
-              <th>Tempo</th>
-              <th>Class. geral</th>
-              <th>Escalão</th>
-              <th>Class. escalão</th>
-              <th>Categoria</th>
-              <th id="actionsHeading" hidden>Ações</th>
+              <th>Marca / tempo</th>
+              <th>Classificação geral</th>
+              <th>Escalão / classificação</th>
+              <th>Tipo</th>
+              <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="rows">
-            <tr><td colspan="9" class="empty">A carregar resultados...</td></tr>
-          </tbody>
+          <tbody id="rows"></tbody>
         </table>
       </div>
-    </section>
+      <div class="empty" id="empty" hidden>Não foram encontrados resultados.</div>
+    </div>
 
-    <section class="section" id="loginPanel" hidden>
-      <div class="section-header">
-        <h2>Iniciar sessão de administrador</h2>
-      </div>
-      <div class="auth-box">
-        <p>Inicia sessão com a conta autorizada no Supabase para adicionar, editar ou eliminar resultados.</p>
-        <form id="loginForm">
-          <div class="auth-fields">
-            <input type="email" id="loginEmail" placeholder="Email" autocomplete="username" required>
-            <input type="password" id="loginPassword" placeholder="Palavra-passe" autocomplete="current-password" required>
-            <button class="btn-primary" type="submit">Entrar</button>
-          </div>
-        </form>
-      </div>
-    </section>
+    <div class="bottom">
+      <section class="panel">
+        <h3>Objetivos da época</h3>
+        <p class="note">Acompanha o número de resultados registados durante a época.</p>
+        <div class="progress-row">
+          <span>Registar resultados</span>
+          <strong id="goalCount">0 / 20</strong>
+        </div>
+        <div class="track"><div class="bar" id="goalBar"></div></div>
+      </section>
+      <section class="panel">
+        <h3>Sobre este registo</h3>
+        <p class="note">Este é um registo pessoal de resultados de natação pura e águas abertas. Confirma os dados antes de os partilhares. Este site não é oficial nem afiliado ao Sporting Clube de Portugal.</p>
+        <p class="note">Os resultados são guardados na base de dados Supabase, não apenas no navegador.</p>
+      </section>
+    </div>
   </main>
 
-  <footer>Sporting Natação · Resultados e classificações</footer>
+  <footer>
+    SPORTING CP · NATAÇÃO · O trabalho faz o campeão.<br>
+    Modelo pessoal não oficial · Não afiliado nem validado pelo Sporting Clube de Portugal.
+  </footer>
+</div>
 
-  <div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitle">Adicionar resultado</h2>
-        <button class="btn-secondary" type="button" id="closeModalBtn">Fechar</button>
-      </div>
-
-      <div class="modal-body">
-        <form id="resultForm">
-          <div class="form-grid">
-            <div class="field">
-              <label for="distance">Prova / distância</label>
-              <input id="distance" required placeholder="Ex.: 100m Livres">
-            </div>
-
-            <div class="field">
-              <label for="kind">Categoria</label>
-              <select id="kind" required>
-                <option value="Piscina curta">Piscina curta</option>
-                <option value="Piscina longa">Piscina longa</option>
-                <option value="Águas abertas">Águas abertas</option>
-              </select>
-            </div>
-
-            <div class="field full">
-              <label for="meet">Competição</label>
-              <input id="meet" required placeholder="Nome da competição">
-            </div>
-
-            <div class="field">
-              <label for="date">Data</label>
-              <input type="date" id="date" required>
-            </div>
-
-            <div class="field">
-              <label for="time">Tempo</label>
-              <input id="time" required placeholder="Ex.: 01:02.35">
-            </div>
-
-            <div class="field">
-              <label for="place">Classificação geral</label>
-              <input type="number" id="place" min="1" placeholder="Ex.: 2">
-            </div>
-
-            <div class="field">
-              <label for="ageGroup">Escalão</label>
-              <input id="ageGroup" placeholder="Ex.: Juvenis">
-            </div>
-
-            <div class="field">
-              <label for="ageGroupPlace">Classificação no escalão</label>
-              <input type="number" id="ageGroupPlace" min="1" placeholder="Ex.: 1">
-            </div>
-
-            <div class="field">
-              <label for="season">Época</label>
-              <input id="season" type="number" min="2000" max="2100" required>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button class="btn-secondary" type="button" id="cancelModalBtn">Cancelar</button>
-            <button class="btn-primary" type="submit" id="saveBtn">Guardar resultado</button>
-          </div>
-        </form>
-      </div>
+<div class="modal-back" id="resultModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resultModalTitle">
+    <div class="modal-head">
+      <h2 id="resultModalTitle">Adicionar resultado</h2>
+      <button class="close" id="closeResult" aria-label="Fechar">✕</button>
     </div>
+    <form id="resultForm">
+      <div class="formgrid">
+        <div class="field">
+          <label for="kind">Disciplina</label>
+          <select id="kind" required>
+            <option value="pool">Natação pura</option>
+            <option value="open">Águas abertas</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="distance">Distância / prova</label>
+          <input id="distance" required placeholder="Ex.: 100 m livres">
+        </div>
+        <div class="field full">
+          <label for="meet">Competição</label>
+          <input id="meet" required placeholder="Nome da competição">
+        </div>
+        <div class="field">
+          <label for="date">Data</label>
+          <input id="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="time">Marca / tempo</label>
+          <input id="time" required placeholder="Ex.: 00:58.42">
+        </div>
+        <div class="field">
+          <label for="place">Classificação geral</label>
+          <input id="place" placeholder="Ex.: 5.º lugar">
+        </div>
+        <div class="field">
+          <label for="ageGroup">Escalão</label>
+          <input id="ageGroup" placeholder="Ex.: Juvenis A">
+        </div>
+        <div class="field">
+          <label for="ageGroupPlace">Classificação no escalão</label>
+          <input id="ageGroupPlace" placeholder="Ex.: 2.º lugar">
+        </div>
+        <div class="field">
+          <label for="season">Ano</label>
+          <input id="season" type="number" min="2000" max="2100" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn secondary" id="cancelResult">Cancelar</button>
+        <button type="submit" class="btn" id="saveResult">Guardar resultado</button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <script>
-    // Preenche com as credenciais do teu projeto Supabase.
-    // Nunca coloques a chave service_role neste ficheiro público.
-    const SUPABASE_URL = 'https://dckkjlvobvxugnvawtcj.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_8IrDqplktlBsKAfSIrUm8w_WBgGIme1';
-    const ADMIN_UID = 'f65a41f3-23c3-441c-b624-4725071a3831';
+<div class="modal-back" id="loginModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal-head">
+      <h2 id="loginTitle">Acesso de administrador</h2>
+      <button class="close" id="closeLogin" aria-label="Fechar">✕</button>
+    </div>
+    <form id="loginForm">
+      <div class="formgrid">
+        <div class="field full">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" autocomplete="username" required>
+        </div>
+        <div class="field full">
+          <label for="loginPassword">Palavra-passe</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </div>
+      </div>
+      <p class="tiny">Inicia sessão com a conta de administrador criada no Supabase.</p>
+      <div class="form-actions">
+        <button type="button" class="btn secondary" id="cancelLogin">Cancelar</button>
+        <button type="submit" class="btn">Iniciar sessão</button>
+      </div>
+    </form>
+  </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/*
+  CONFIGURAÇÃO:
+  1. Substitui o URL pelo Project URL do Supabase.
+  2. Usa a Publishable key ou a chave pública anon.
+  3. Substitui ADMIN_UID pelo UUID completo do utilizador administrador.
+  Nunca coloques uma service_role ou secret key neste ficheiro público.
+*/
+const SUPABASE_URL = 'https://dckkjlvobvxugnvawtcj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_8IrDqplktlBsKAfSIrUm8w_WBgGIme1';
+const ADMIN_UID = 'f65a41f3-23c3-441c-b624-4725071a3831';
 
-    const configured =
-      SUPABASE_URL.startsWith('https://') &&
-      !SUPABASE_URL.includes('O_TEU_PROJECT_ID') &&
-      SUPABASE_ANON_KEY.length > 20 &&
-      !SUPABASE_ANON_KEY.includes('A_TUA_SUPABASE_ANON_KEY') &&
-      ADMIN_UID.length > 20 &&
-      !ADMIN_UID.includes('O_TEU_ADMIN_UID');
+const $ = id => document.getElementById(id);
+const currentYear = new Date().getFullYear();
 
-    const supabase = configured
-      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      : null;
+let db = null;
+let session = null;
+let results = [];
+let activeKind = 'all';
+let editingId = null;
 
-    let results = [];
-    let editingId = null;
-    let isAdmin = false;
+const configured =
+  /^https:\/\/.+\.supabase\.co\/?$/.test(SUPABASE_URL) &&
+  SUPABASE_ANON_KEY.length > 20 &&
+  !SUPABASE_ANON_KEY.includes('A_TUA_CHAVE') &&
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(ADMIN_UID);
 
-    const $ = id => document.getElementById(id);
+function isAdmin() {
+  return Boolean(session?.user && session.user.id === ADMIN_UID);
+}
 
-    function escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>"']/g, char => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[char]);
+function labelKind(kind) {
+  return kind === 'pool' ? 'Natação pura' : 'Águas abertas';
+}
+
+function formatDate(value) {
+  if (!value) return '—';
+  const parts = String(value).split('-');
+  return parts.length === 3
+    ? `${parts[2]}/${parts[1]}/${parts[0]}`
+    : value;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+function setStatus(message, type = '') {
+  $('status').textContent = message;
+  $('status').className = type;
+}
+
+function setAuthUI() {
+  const admin = isAdmin();
+  $('addTop').hidden = !admin;
+  $('loginBtn').textContent = admin ? 'Terminar sessão' : 'Iniciar sessão';
+  render();
+}
+
+function openResultModal(item = null) {
+  if (!isAdmin()) {
+    setStatus('Tens de iniciar sessão como administrador.', 'error');
+    return;
+  }
+
+  editingId = item ? item.id : null;
+
+  $('resultModalTitle').textContent = item ? 'Editar resultado' : 'Adicionar resultado';
+  $('saveResult').textContent = item ? 'Guardar alterações' : 'Guardar resultado';
+
+  $('kind').value = item?.kind || 'pool';
+  $('distance').value = item?.distance || '';
+  $('meet').value = item?.meet || '';
+  $('date').value = item?.date || '';
+  $('time').value = item?.time || '';
+  $('place').value = item?.overall_place ?? item?.place ?? '';
+  $('ageGroup').value = item?.age_group || '';
+  $('ageGroupPlace').value = item?.age_group_place || '';
+  $('season').value = item?.season || currentYear;
+
+  $('resultModal').classList.add('open');
+}
+
+function closeResultModal() {
+  $('resultModal').classList.remove('open');
+  editingId = null;
+}
+
+function closeLoginModal() {
+  $('loginModal').classList.remove('open');
+}
+
+function populateYears() {
+  const years = [...new Set(results.map(r => String(r.season)).filter(Boolean))]
+    .sort((a, b) => Number(b) - Number(a));
+
+  const select = $('year');
+  const previous = select.value;
+
+  select.innerHTML = '<option value="all">Todos os anos</option>';
+
+  years.forEach(year => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    select.appendChild(option);
+  });
+
+  if (years.includes(previous)) select.value = previous;
+}
+
+function render() {
+  const query = $('search').value.trim().toLocaleLowerCase('pt-PT');
+  const year = $('year').value;
+  const admin = isAdmin();
+
+  const filtered = results.filter(r => {
+    const matchesKind = activeKind === 'all' || r.kind === activeKind;
+
+    const searchable = [
+      r.distance,
+      r.meet,
+      r.overall_place ?? r.place ?? '',
+      r.age_group || '',
+      r.age_group_place || ''
+    ].join(' ').toLocaleLowerCase('pt-PT');
+
+    const matchesSearch = searchable.includes(query);
+    const matchesYear = year === 'all' || String(r.season) === year;
+
+    return matchesKind && matchesSearch && matchesYear;
+  });
+
+  // Esta parte preenche efetivamente a tabela com os resultados carregados.
+  $('rows').innerHTML = filtered.map(r => `
+    <tr>
+      <td>
+        <div class="event">${escapeHtml(r.distance)}</div>
+        <div class="sub">${escapeHtml(labelKind(r.kind))}</div>
+      </td>
+      <td>${escapeHtml(r.meet)}</td>
+      <td>${escapeHtml(formatDate(r.date))}</td>
+      <td><span class="time">${escapeHtml(r.time)}</span></td>
+      <td>${escapeHtml(r.overall_place ?? r.place ?? '—')}</td>
+      <td>
+        ${escapeHtml(r.age_group || '—')}
+        <div class="sub">${escapeHtml(r.age_group_place || '')}</div>
+      </td>
+      <td><span class="tag">${escapeHtml(labelKind(r.kind))}</span></td>
+      <td>
+        ${admin ? `
+          <div class="actions">
+            <button type="button" class="small-btn" data-edit="${escapeHtml(r.id)}">Editar</button>
+            <button type="button" class="small-btn delete" data-delete="${escapeHtml(r.id)}">Apagar</button>
+          </div>
+        ` : '—'}
+      </td>
+    </tr>
+  `).join('');
+
+  $('empty').hidden = filtered.length > 0;
+  $('resultCount').textContent =
+    `${filtered.length} resultado${filtered.length === 1 ? '' : 's'}`;
+
+  $('statCount').textContent = results.length;
+  $('statOpen').textContent = results.filter(r => r.kind === 'open').length;
+
+  $('statPodium').textContent = results.filter(r =>
+    /(^|[^0-9])(1|2|3)(\.º|\.ª|o|a|º|ª)?\s*(lugar)?/i.test(
+      String(r.overall_place ?? r.place ?? '')
+    )
+  ).length;
+
+  const pool = results.filter(r =>
+    r.kind === 'pool' && /50\s*m?\s*livres/i.test(r.distance || '')
+  );
+
+  $('statPool').textContent = pool.length
+    ? pool.map(r => r.time).sort((a, b) =>
+        String(a).localeCompare(String(b), 'en', { numeric: true })
+      )[0]
+    : '—';
+
+  $('goalCount').textContent = `${results.length} / 20`;
+  $('goalBar').style.width = `${Math.min(100, results.length / 20 * 100)}%`;
+}
+
+async function loadResults() {
+  if (!db) return;
+
+  setStatus('A carregar resultados…');
+
+  const { data, error } = await db
+    .from('swim_results')
+    .select('*')
+    .order('date', { ascending: false });
+
+  if (error) {
+    console.error('Erro ao carregar resultados:', error);
+    setStatus(
+      'Não foi possível carregar os resultados. Confirma a tabela, as colunas e as políticas RLS no Supabase.',
+      'error'
+    );
+    return;
+  }
+
+  results = data || [];
+  populateYears();
+  render();
+  setStatus('Resultados atualizados.', 'success');
+}
+
+document.querySelectorAll('.tab').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(tab =>
+      tab.classList.toggle('active', tab === button)
+    );
+    activeKind = button.dataset.kind;
+    render();
+  });
+});
+
+$('search').addEventListener('input', render);
+$('year').addEventListener('change', render);
+
+$('addTop').addEventListener('click', () => openResultModal());
+$('closeResult').addEventListener('click', closeResultModal);
+$('cancelResult').addEventListener('click', closeResultModal);
+
+$('resultModal').addEventListener('click', event => {
+  if (event.target === $('resultModal')) closeResultModal();
+});
+
+$('closeLogin').addEventListener('click', closeLoginModal);
+$('cancelLogin').addEventListener('click', closeLoginModal);
+
+$('loginModal').addEventListener('click', event => {
+  if (event.target === $('loginModal')) closeLoginModal();
+});
+
+$('loginBtn').addEventListener('click', async () => {
+  if (!db) {
+    setStatus('Configura primeiro o Supabase no código.', 'error');
+    return;
+  }
+
+  if (isAdmin()) {
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+      setStatus('Não foi possível terminar a sessão.', 'error');
+      return;
     }
 
-    function showStatus(message, type = 'info') {
-      const el = $('status');
-      el.textContent = message;
-      el.className = 'status ' + type;
-    }
+    session = null;
+    setAuthUI();
+    setStatus('Sessão terminada.');
+    return;
+  }
 
-    function hideStatus() {
-      $('status').className = 'status';
-      $('status').textContent = '';
-    }
+  $('loginModal').classList.add('open');
+});
 
-    function generalPlace(item) {
-      const value = item.overall_place ?? item.place;
-      const n = Number(value);
-      return Number.isFinite(n) && n > 0 ? n : null;
-    }
+$('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
 
-    function agePlace(item) {
-      const n = Number(item.age_group_place);
-      return Number.isFinite(n) && n > 0 ? n : null;
-    }
+  if (!db) {
+    setStatus('Configura primeiro o Supabase no código.', 'error');
+    return;
+  }
 
-    function isPodium(place) {
-      return place !== null && place >= 1 && place <= 3;
-    }
+  const { data, error } = await db.auth.signInWithPassword({
+    email: $('loginEmail').value.trim(),
+    password: $('loginPassword').value
+  });
 
-    function labelKind(kind) {
-      return kind || '—';
-    }
+  if (error) {
+    console.error('Erro de login:', error);
+    setStatus('Falha no login. Confirma o email e a palavra-passe.', 'error');
+    return;
+  }
 
-    function formatDate(date) {
-      if (!date) return '—';
-      const parsed = new Date(date + 'T00:00:00');
-      if (Number.isNaN(parsed.getTime())) return date;
-      return parsed.toLocaleDateString('pt-PT');
-    }
+  if (data.user.id !== ADMIN_UID) {
+    await db.auth.signOut();
+    session = null;
+    setAuthUI();
+    setStatus('Esta conta não está autorizada como administradora.', 'error');
+    closeLoginModal();
+    return;
+  }
 
-    function podiumBadge(place) {
-      if (!place) return '<span class="podium">—</span>';
+  session = data.session;
+  $('loginForm').reset();
+  closeLoginModal();
+  setAuthUI();
+  setStatus('Sessão de administrador iniciada.', 'success');
+  await loadResults();
+});
 
-      const cls = place === 1 ? 'first' : place === 2 ? 'second' : place === 3 ? 'third' : '';
-      return `<span class="podium ${cls}">${place}.º</span>`;
-    }
+// Um único listener para adicionar e editar resultados.
+$('resultForm').addEventListener('submit', async event => {
+  event.preventDefault();
 
-    function setAuthUI() {
-      $('addBtn').hidden = !isAdmin;
-      $('logoutBtn').hidden = !isAdmin;
-      $('loginToggle').hidden = isAdmin;
-      $('loginPanel').hidden = true;
-      $('actionsHeading').hidden = !isAdmin;
-      render();
-    }
+  if (!db || !isAdmin()) {
+    setStatus('Inicia sessão como administrador antes de guardar.', 'error');
+    return;
+  }
 
-    function populateYears() {
-      const select = $('yearFilter');
-      const current = select.value;
+  const record = {
+    kind: $('kind').value,
+    distance: $('distance').value.trim(),
+    meet: $('meet').value.trim(),
+    date: $('date').value,
+    time: $('time').value.trim(),
+    overall_place: $('place').value.trim() || null,
+    age_group: $('ageGroup').value.trim() || null,
+    age_group_place: $('ageGroupPlace').value.trim() || null,
+    season: Number($('season').value)
+  };
 
-      const years = [...new Set(
-        results.map(r => String(r.season || (r.date ? r.date.slice(0, 4) : '')))
-          .filter(Boolean)
-      )].sort((a, b) => Number(b) - Number(a));
+  const wasEditing = editingId !== null;
+  const idToEdit = editingId;
 
-      select.innerHTML = '<option value="">Todas as épocas</option>' +
-        years.map(y => `<option value="${escapeHtml(y)}">${escapeHtml(y)}</option>`).join('');
+  $('saveResult').disabled = true;
 
-      if (years.includes(current)) select.value = current;
-    }
+  try {
+    let response;
 
-    function render() {
-      const query = $('search').value.trim().toLocaleLowerCase('pt-PT');
-      const year = $('yearFilter').value;
-      const kind = $('kindFilter').value;
-
-      const filtered = results.filter(item => {
-        const text = [
-          item.distance,
-          item.meet,
-          item.kind,
-          item.age_group,
-          item.time,
-          item.season
-        ].join(' ').toLocaleLowerCase('pt-PT');
-
-        const itemYear = String(item.season || (item.date ? item.date.slice(0, 4) : ''));
-
-        return (!query || text.includes(query)) &&
-          (!year || itemYear === year) &&
-          (!kind || item.kind === kind);
-      });
-
-      // Os indicadores são calculados sobre todos os resultados,
-      // independentemente dos filtros aplicados à tabela.
-      const generalPodiums = results.filter(item =>
-        isPodium(generalPlace(item))
-      ).length;
-
-      const agePodiums = results.filter(item =>
-        isPodium(agePlace(item))
-      ).length;
-
-      $('statResults').textContent = results.length;
-      $('statGeneralPodiums').textContent = generalPodiums;
-      $('statAgePodiums').textContent = agePodiums;
-      $('statTotalPodiums').textContent = generalPodiums + agePodiums;
-
-      const rows = $('rows');
-
-      if (!filtered.length) {
-        rows.innerHTML = `
-          <tr>
-            <td colspan="${isAdmin ? 9 : 8}" class="empty">
-              ${results.length
-                ? 'Não foram encontrados resultados para esta pesquisa.'
-                : 'Ainda não existem resultados registados.'}
-            </td>
-          </tr>`;
-        return;
-      }
-
-      rows.innerHTML = filtered.map(item => {
-        const overall = generalPlace(item);
-        const age = agePlace(item);
-        const ageGroup = item.age_group || '—';
-
-        const actions = isAdmin
-          ? `<td>
-               <div class="actions">
-                 <button class="small-btn" data-edit="${escapeHtml(item.id)}">Editar</button>
-                 <button class="small-btn delete" data-delete="${escapeHtml(item.id)}">Apagar</button>
-               </div>
-             </td>`
-          : '';
-
-        return `
-          <tr>
-            <td>
-              <div class="event">${escapeHtml(item.distance || '—')}</div>
-            </td>
-            <td>${escapeHtml(item.meet || '—')}</td>
-            <td>${escapeHtml(formatDate(item.date))}</td>
-            <td><span class="time">${escapeHtml(item.time || '—')}</span></td>
-            <td>${podiumBadge(overall)}</td>
-            <td>${escapeHtml(ageGroup)}</td>
-            <td>${podiumBadge(age)}</td>
-            <td><span class="tag">${escapeHtml(labelKind(item.kind))}</span></td>
-            ${actions}
-          </tr>`;
-      }).join('');
-    }
-
-    async function loadResults() {
-      if (!configured) {
-        results = [];
-        render();
-        showStatus(
-          'Configura o SUPABASE_URL, a SUPABASE_ANON_KEY e o ADMIN_UID no início do código para carregar os resultados.',
-          'info'
-        );
-        return;
-      }
-
-      const { data, error } = await supabase
+    if (wasEditing) {
+      response = await db
         .from('swim_results')
-        .select('*')
-        .order('date', { ascending: false });
-
-      if (error) {
-        showStatus('Não foi possível carregar os resultados: ' + error.message, 'error');
-        return;
-      }
-
-      results = data || [];
-      populateYears();
-      render();
-      hideStatus();
-    }
-
-    function openResultModal(item = null) {
-      if (!isAdmin) {
-        showStatus('Tens de iniciar sessão como administrador.', 'error');
-        return;
-      }
-
-      editingId = item ? item.id : null;
-      $('modalTitle').textContent = item ? 'Editar resultado' : 'Adicionar resultado';
-
-      $('distance').value = item?.distance || '';
-      $('kind').value = item?.kind || 'Piscina curta';
-      $('meet').value = item?.meet || '';
-      $('date').value = item?.date || new Date().toISOString().slice(0, 10);
-      $('time').value = item?.time || '';
-      $('place').value = generalPlace(item) ?? '';
-      $('ageGroup').value = item?.age_group || '';
-      $('ageGroupPlace').value = agePlace(item) ?? '';
-      $('season').value = item?.season || new Date().getFullYear();
-
-      $('resultModal').classList.add('open');
-    }
-
-    function closeModal() {
-      $('resultModal').classList.remove('open');
-      $('resultForm').reset();
-      editingId = null;
-    }
-
-    async function saveResult(event) {
-      event.preventDefault();
-
-      if (!isAdmin || !supabase) {
-        showStatus('Não tens autorização para guardar resultados.', 'error');
-        return;
-      }
-
-      const overallInput = $('place').value.trim();
-      const agePlaceInput = $('ageGroupPlace').value.trim();
-
-      const record = {
-        distance: $('distance').value.trim(),
-        kind: $('kind').value,
-        meet: $('meet').value.trim(),
-        date: $('date').value,
-        time: $('time').value.trim(),
-        overall_place: overallInput ? Number(overallInput) : null,
-        age_group: $('ageGroup').value.trim() || null,
-        age_group_place: agePlaceInput ? Number(agePlaceInput) : null,
-        season: Number($('season').value)
-      };
-
-      if (
-        (record.overall_place !== null && (!Number.isInteger(record.overall_place) || record.overall_place < 1)) ||
-        (record.age_group_place !== null && (!Number.isInteger(record.age_group_place) || record.age_group_place < 1))
-      ) {
-        showStatus('As classificações têm de ser números inteiros positivos.', 'error');
-        return;
-      }
-
-      $('saveBtn').disabled = true;
-
-      try {
-        let response;
-
-        if (editingId !== null) {
-          response = await supabase
-            .from('swim_results')
-            .update(record)
-            .eq('id', editingId);
-        } else {
-          response = await supabase
-            .from('swim_results')
-            .insert(record);
-        }
-
-        if (response.error) throw response.error;
-
-        closeModal();
-        await loadResults();
-        showStatus('Resultado guardado com sucesso.', 'success');
-      } catch (error) {
-        showStatus('Erro ao guardar o resultado: ' + (error.message || error), 'error');
-      } finally {
-        $('saveBtn').disabled = false;
-      }
-    }
-
-    async function deleteResult(id) {
-      if (!isAdmin || !supabase) return;
-
-      const confirmed = confirm('Tens a certeza de que queres apagar este resultado?');
-      if (!confirmed) return;
-
-      const { error } = await supabase
+        .update(record)
+        .eq('id', idToEdit);
+    } else {
+      response = await db
         .from('swim_results')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        showStatus('Erro ao apagar o resultado: ' + error.message, 'error');
-        return;
-      }
-
-      await loadResults();
-      showStatus('Resultado eliminado.', 'success');
+        .insert(record);
     }
 
-    async function login(event) {
-      event.preventDefault();
+    if (response.error) throw response.error;
 
-      if (!supabase) {
-        showStatus('Configura primeiro as credenciais do Supabase no código.', 'error');
-        return;
-      }
+    closeResultModal();
+    await loadResults();
 
-      const email = $('loginEmail').value.trim();
-      const password = $('loginPassword').value;
+    setStatus(
+      wasEditing ? 'Resultado atualizado.' : 'Resultado adicionado.',
+      'success'
+    );
+  } catch (error) {
+    console.error('Erro ao guardar resultado:', error);
+    setStatus(
+      'Não foi possível guardar. Confirma as colunas da tabela e as políticas RLS no Supabase.',
+      'error'
+    );
+  } finally {
+    $('saveResult').disabled = false;
+  }
+});
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+$('rows').addEventListener('click', async event => {
+  const editButton = event.target.closest('[data-edit]');
+  const deleteButton = event.target.closest('[data-delete]');
 
-      if (error) {
-        showStatus('Não foi possível iniciar sessão: ' + error.message, 'error');
-        return;
-      }
+  if (!isAdmin()) return;
 
-      if (!data.user || data.user.id !== ADMIN_UID) {
-        await supabase.auth.signOut();
-        isAdmin = false;
-        setAuthUI();
-        showStatus('Esta conta não tem permissões de administrador.', 'error');
-        return;
-      }
+  if (editButton) {
+    const item = results.find(r => String(r.id) === editButton.dataset.edit);
+    if (item) openResultModal(item);
+    return;
+  }
 
-      isAdmin = true;
+  if (deleteButton) {
+    const item = results.find(r => String(r.id) === deleteButton.dataset.delete);
+    if (!item) return;
+
+    if (!confirm(`Queres apagar "${item.distance}" — ${item.meet}?`)) return;
+
+    const { error } = await db
+      .from('swim_results')
+      .delete()
+      .eq('id', item.id);
+
+    if (error) {
+      console.error('Erro ao apagar resultado:', error);
+      setStatus('Não foi possível apagar. Confirma as políticas RLS.', 'error');
+      return;
+    }
+
+    await loadResults();
+    setStatus('Resultado apagado.', 'success');
+  }
+});
+
+$('export').addEventListener('click', () => {
+  const headings = [
+    'Disciplina', 'Prova', 'Competição', 'Data', 'Marca',
+    'Classificação geral', 'Escalão', 'Classificação no escalão', 'Ano'
+  ];
+
+  const data = [
+    headings,
+    ...results.map(r => [
+      labelKind(r.kind),
+      r.distance,
+      r.meet,
+      r.date,
+      r.time,
+      r.overall_place ?? r.place ?? '',
+      r.age_group || '',
+      r.age_group_place || '',
+      r.season
+    ])
+  ];
+
+  const csv = '\ufeff' + data.map(row =>
+    row.map(value => `"${String(value ?? '').replace(/"/g, '""')}"`).join(';')
+  ).join('\r\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'resultados-natacao.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+});
+
+async function init() {
+  $('season').value = currentYear;
+
+  if (!configured) {
+    setStatus(
+      'Falta configurar o URL, a chave pública e o UUID completo no início do código.',
+      'error'
+    );
+    $('empty').hidden = false;
+    $('empty').textContent = 'Configura o Supabase para carregar os resultados.';
+    $('loginBtn').disabled = true;
+    return;
+  }
+
+  if (!window.supabase) {
+    setStatus(
+      'Não foi possível carregar a biblioteca Supabase. Verifica a ligação à internet.',
+      'error'
+    );
+    return;
+  }
+
+  try {
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const { data, error } = await db.auth.getSession();
+    if (error) throw error;
+
+    session = data.session;
+
+    db.auth.onAuthStateChange((_event, newSession) => {
+      session = newSession;
       setAuthUI();
-      showStatus('Sessão de administrador iniciada.', 'success');
-    }
-
-    async function logout() {
-      if (supabase) {
-        await supabase.auth.signOut();
-      }
-
-      isAdmin = false;
-      setAuthUI();
-      showStatus('Sessão terminada.', 'info');
-    }
-
-    function exportCSV() {
-      if (!results.length) {
-        showStatus('Não existem resultados para exportar.', 'info');
-        return;
-      }
-
-      const headers = [
-        'Prova',
-        'Categoria',
-        'Competição',
-        'Data',
-        'Tempo',
-        'Classificação geral',
-        'Escalão',
-        'Classificação de escalão',
-        'Época'
-      ];
-
-      const lines = results.map(item => [
-        item.distance,
-        item.kind,
-        item.meet,
-        item.date,
-        item.time,
-        generalPlace(item) ?? '',
-        item.age_group ?? '',
-        agePlace(item) ?? '',
-        item.season ?? ''
-      ]);
-
-      const csv = [headers, ...lines]
-        .map(row => row.map(value =>
-          '"' + String(value ?? '').replace(/"/g, '""') + '"'
-        ).join(';'))
-        .join('\r\n');
-
-      const blob = new Blob(['\uFEFF' + csv], {
-        type: 'text/csv;charset=utf-8;'
-      });
-
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'resultados-sporting-natacao.csv';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    $('search').addEventListener('input', render);
-    $('yearFilter').addEventListener('change', render);
-    $('kindFilter').addEventListener('change', render);
-
-    $('addBtn').addEventListener('click', () => openResultModal());
-    $('closeModalBtn').addEventListener('click', closeModal);
-    $('cancelModalBtn').addEventListener('click', closeModal);
-    $('resultForm').addEventListener('submit', saveResult);
-    $('loginForm').addEventListener('submit', login);
-    $('logoutBtn').addEventListener('click', logout);
-    $('exportBtn').addEventListener('click', exportCSV);
-
-    $('loginToggle').addEventListener('click', () => {
-      $('loginPanel').hidden = !$('loginPanel').hidden;
-      if (!$('loginPanel').hidden) {
-        $('loginEmail').focus();
-      }
+      if (db) loadResults();
     });
 
-    $('resultModal').addEventListener('click', event => {
-      if (event.target === $('resultModal')) closeModal();
-    });
+    setAuthUI();
+    await loadResults();
+  } catch (error) {
+    console.error('Erro de inicialização:', error);
+    setStatus(
+      'Erro de ligação ao Supabase. Confirma o URL, a chave e as configurações.',
+      'error'
+    );
+  }
+}
 
-    $('rows').addEventListener('click', event => {
-      const editButton = event.target.closest('[data-edit]');
-      const deleteButton = event.target.closest('[data-delete]');
-
-      if (editButton) {
-        const item = results.find(r => String(r.id) === editButton.dataset.edit);
-        if (item) openResultModal(item);
-      }
-
-      if (deleteButton) {
-        deleteResult(deleteButton.dataset.delete);
-      }
-    });
-
-    async function initialize() {
-      if (!configured) {
-        setAuthUI();
-        await loadResults();
-        return;
-      }
-
-      const { data } = await supabase.auth.getSession();
-      isAdmin = Boolean(data.session && data.session.user.id === ADMIN_UID);
-
-      if (data.session && !isAdmin) {
-        await supabase.auth.signOut();
-      }
-
-      setAuthUI();
-      await loadResults();
-
-      supabase.auth.onAuthStateChange((_event, session) => {
-        isAdmin = Boolean(session && session.user.id === ADMIN_UID);
-        setAuthUI();
-      });
-    }
-
-    initialize();
-  </script>
+init();
+</script>
 </body>
 </html>
-```
+
