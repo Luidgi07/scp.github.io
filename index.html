@@ -635,11 +635,16 @@ function render() {
   $('statCount').textContent = results.length;
   $('statOpen').textContent = results.filter(r => r.kind === 'open').length;
 
-  $('statPodium').textContent = results.filter(r =>
-    /(^|[^0-9])(1|2|3)(\.º|\.ª|o|a|º|ª)?\s*(lugar)?/i.test(
-      String(r.overall_place ?? r.place ?? '')
-    )
-  ).length;
+ 
+  $('statPodium').textContent = results.filter(r => {
+    const position = String(
+      r.overall_place ?? r.place ?? ''
+    ).trim();
+  
+    // Aceita apenas classificações 1.º, 2.º ou 3.º lugar.
+    return /^(?:1|2|3)(?:\.º|\.ª|º|ª|o|a)?(?:\s+ lugar)?$/i.test(position);
+  }).length;
+
 
   const pool = results.filter(r =>
     r.kind === 'pool' && /50\s*m?\s*livres/i.test(r.distance || '')
