@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sporting Natação | Resultados</title>
-  <meta name="description" content="Resultados pessoais de natação pura e águas abertas.">
+  <meta name="description" content="Resultados de natação pura e águas abertas do Sporting CP.">
+
   <style>
     :root {
       color-scheme: light;
@@ -79,7 +80,12 @@
       margin: 34px 0 12px;
     }
 
-    .hero p { max-width: 620px; line-height: 1.6; color: #e0f0e5; }
+    .hero p {
+      max-width: 620px;
+      line-height: 1.6;
+      color: #e0f0e5;
+    }
+
     .hero-bottom { flex-wrap: wrap; margin-top: 22px; }
 
     .pill {
@@ -91,11 +97,25 @@
       font-weight: 700;
     }
 
-    .wrap { max-width: 1160px; margin: auto; padding: 28px 22px 54px; }
-    .section-head { margin-bottom: 16px; flex-wrap: wrap; }
+    .wrap {
+      max-width: 1160px;
+      margin: auto;
+      padding: 28px 22px 54px;
+    }
+
+    .section-head {
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
     h2 { font-size: 23px; margin: 0; letter-spacing: -.03em; }
     h3 { margin-top: 0; }
-    .muted, .tiny { color: var(--muted); font-size: 12px; margin-top: 5px; }
+
+    .muted, .tiny {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
 
     .stats {
       display: grid;
@@ -126,14 +146,37 @@
     }
 
     .tab { background: white; color: var(--muted); }
-    .tab.active { background: var(--deep); color: white; border-color: var(--deep); }
+
+    .tab.active {
+      background: var(--deep);
+      color: white;
+      border-color: var(--deep);
+    }
+
     .btn { background: var(--lime); color: #15301b; border: 0; }
-    .btn.secondary { background: white; color: var(--ink); border: 1px solid var(--line); }
-    .btn.danger { background: #fff0f0; color: var(--danger); border: 1px solid #f0caca; }
+
+    .btn.secondary {
+      background: white;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn.danger {
+      background: #fff0f0;
+      color: var(--danger);
+      border: 1px solid #f0caca;
+    }
+
     .btn:disabled { opacity: .55; cursor: wait; }
 
     .toolbar { flex-wrap: wrap; margin-bottom: 15px; }
-    .filter { display: flex; flex: 1; min-width: 230px; gap: 9px; }
+
+    .filter {
+      display: flex;
+      flex: 1;
+      min-width: 230px;
+      gap: 9px;
+    }
 
     .filter input, .filter select, .field input, .field select {
       width: 100%;
@@ -147,7 +190,12 @@
 
     .tablebox { overflow: hidden; }
     .table-scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
 
     th {
       text-align: left;
@@ -159,7 +207,12 @@
       padding: 14px;
     }
 
-    td { padding: 14px; border-top: 1px solid var(--line); font-size: 13px; }
+    td {
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
     tbody tr:hover { background: #f7fbf7; }
     .event { font-weight: 800; }
     .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
@@ -190,11 +243,31 @@
     .empty { text-align: center; padding: 30px; color: var(--muted); }
     [hidden] { display: none !important; }
 
-    .bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
     .panel { padding: 20px; }
     .note { font-size: 12px; line-height: 1.65; color: var(--muted); }
-    .progress-row { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; margin: 15px 0 8px; }
-    .track { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12px;
+      margin: 15px 0 8px;
+    }
+
+    .track {
+      height: 8px;
+      background: var(--line);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
     .bar { height: 100%; background: var(--green); width: 0; }
 
     footer {
@@ -228,13 +301,37 @@
     }
 
     .modal-head { margin-bottom: 18px; }
+
     .modal-head h2 { font-size: 20px; }
-    .close { border: 0; border-radius: 8px; padding: 8px 11px; background: var(--soft); }
-    .formgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .close {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 11px;
+      background: var(--soft);
+    }
+
+    .formgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field.full { grid-column: 1 / -1; }
-    .field label { color: var(--muted); font-size: 12px; font-weight: 750; }
-    .form-actions { justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .form-actions {
+      justify-content: flex-end;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
     #status { margin: 12px 0; font-size: 13px; color: var(--muted); }
     #status.error { color: var(--danger); }
     #status.success { color: var(--green); }
@@ -254,18 +351,30 @@
     }
   </style>
 </head>
+
 <body>
 <div id="app">
   <header class="hero">
     <div class="top">
       <div class="brand">
-        <div class="crest"><img src="https://assets.football-logos.cc/logos/portugal/512x512/sporting-cp.3a9545a0.png" alt="Logo do Sporting CP"></div>
+        <div class="crest">
+          <img
+            src="https://assets.football-logos.cc/logos/portugal/512x512/sporting-cp.3a9545a0.png"
+            alt="Logo do Sporting CP"
+          >
+        </div>
         <span>SPORTING CP <span style="font-weight:450;color:#d8f6b6">· NATAÇÃO</span></span>
       </div>
       <span class="eyebrow">ÉPOCA 2026 / 2027</span>
     </div>
+
     <h1>Resultados que<br>marcam o ritmo.</h1>
-    <p>O meu percurso na natação pura e nas águas abertas. Tempos, provas e evolução — braçada a braçada, sempre com ambição.</p>
+
+    <p>
+      O meu percurso na natação pura e nas águas abertas.
+      Tempos, provas e evolução — braçada a braçada, sempre com ambição.
+    </p>
+
     <div class="hero-bottom">
       <span class="pill">🏊 Natação pura</span>
       <span class="pill">🌊 Águas abertas</span>
@@ -277,8 +386,9 @@
     <div class="section-head">
       <div>
         <h2>O meu desempenho</h2>
-        <div class="muted">Resumo dos resultados registados</div>
+        <div class="muted">Resumo dos resultados registados do Sporting CP</div>
       </div>
+
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn secondary" id="loginBtn">Iniciar sessão</button>
         <button class="btn" id="addTop" hidden>＋ Adicionar resultado</button>
@@ -293,16 +403,19 @@
         <div class="number" id="statCount">0</div>
         <div class="foot">Total de resultados</div>
       </article>
+
       <article class="stat">
         <div class="label">Melhor marca em piscina</div>
         <div class="number" id="statPool">—</div>
         <div class="foot">50 m livres, se registado</div>
       </article>
+
       <article class="stat">
         <div class="label">Provas de águas abertas</div>
         <div class="number" id="statOpen">0</div>
         <div class="foot">Resultados registados</div>
       </article>
+
       <article class="stat">
         <div class="label">Pódios</div>
         <div class="number" id="statPodium">0</div>
@@ -326,11 +439,17 @@
 
     <div class="toolbar">
       <div class="filter">
-        <input id="search" placeholder="Pesquisar prova ou competição…" aria-label="Pesquisar resultados">
+        <input
+          id="search"
+          placeholder="Pesquisar prova ou competição…"
+          aria-label="Pesquisar resultados"
+        >
+
         <select id="year" aria-label="Filtrar por ano">
           <option value="all">Todos os anos</option>
         </select>
       </div>
+
       <button class="btn secondary" id="export">Exportar CSV ↓</button>
     </div>
 
@@ -352,6 +471,7 @@
           <tbody id="rows"></tbody>
         </table>
       </div>
+
       <div class="empty" id="empty" hidden>Não foram encontrados resultados.</div>
     </div>
 
@@ -359,15 +479,24 @@
       <section class="panel">
         <h3>Objetivos da época</h3>
         <p class="note">Acompanha o número de resultados registados durante a época.</p>
+
         <div class="progress-row">
           <span>Registar resultados</span>
           <strong id="goalCount">0 / 20</strong>
         </div>
-        <div class="track"><div class="bar" id="goalBar"></div></div>
+
+        <div class="track">
+          <div class="bar" id="goalBar"></div>
+        </div>
       </section>
+
       <section class="panel">
         <h3>Sobre este registo</h3>
-        <p class="note">Este é um registo pessoal de resultados de natação pura e águas abertas. Confirma os dados antes de os partilhares. Este site não é oficial nem afiliado ao Sporting Clube de Portugal.</p>
+        <p class="note">
+          Este é um registo pessoal de resultados de natação pura e águas abertas.
+          Confirma os dados antes de os partilhares. Este site é um projeto pessoal
+          e não é oficial nem afiliado ao Sporting Clube de Portugal.
+        </p>
         <p class="note">Os resultados são guardados na base de dados Supabase, não apenas no navegador.</p>
       </section>
     </div>
@@ -385,6 +514,7 @@
       <h2 id="resultModalTitle">Adicionar resultado</h2>
       <button class="close" id="closeResult" aria-label="Fechar">✕</button>
     </div>
+
     <form id="resultForm">
       <div class="formgrid">
         <div class="field">
@@ -394,39 +524,48 @@
             <option value="open">Águas abertas</option>
           </select>
         </div>
+
         <div class="field">
           <label for="distance">Distância / prova</label>
           <input id="distance" required placeholder="Ex.: 100 m livres">
         </div>
+
         <div class="field full">
           <label for="meet">Competição</label>
           <input id="meet" required placeholder="Nome da competição">
         </div>
+
         <div class="field">
           <label for="date">Data</label>
           <input id="date" type="date" required>
         </div>
+
         <div class="field">
           <label for="time">Marca / tempo</label>
           <input id="time" required placeholder="Ex.: 00:58.42">
         </div>
+
         <div class="field">
           <label for="place">Classificação geral</label>
           <input id="place" placeholder="Ex.: 5.º lugar">
         </div>
+
         <div class="field">
           <label for="ageGroup">Escalão</label>
           <input id="ageGroup" placeholder="Ex.: Juvenis A">
         </div>
+
         <div class="field">
           <label for="ageGroupPlace">Classificação no escalão</label>
           <input id="ageGroupPlace" placeholder="Ex.: 2.º lugar">
         </div>
+
         <div class="field">
           <label for="season">Ano</label>
           <input id="season" type="number" min="2000" max="2100" required>
         </div>
       </div>
+
       <div class="form-actions">
         <button type="button" class="btn secondary" id="cancelResult">Cancelar</button>
         <button type="submit" class="btn" id="saveResult">Guardar resultado</button>
@@ -441,18 +580,22 @@
       <h2 id="loginTitle">Acesso de administrador</h2>
       <button class="close" id="closeLogin" aria-label="Fechar">✕</button>
     </div>
+
     <form id="loginForm">
       <div class="formgrid">
         <div class="field full">
           <label for="loginEmail">Email</label>
           <input id="loginEmail" type="email" autocomplete="username" required>
         </div>
+
         <div class="field full">
           <label for="loginPassword">Palavra-passe</label>
           <input id="loginPassword" type="password" autocomplete="current-password" required>
         </div>
       </div>
+
       <p class="tiny">Inicia sessão com a conta de administrador criada no Supabase.</p>
+
       <div class="form-actions">
         <button type="button" class="btn secondary" id="cancelLogin">Cancelar</button>
         <button type="submit" class="btn">Iniciar sessão</button>
@@ -462,17 +605,22 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 /*
-  CONFIGURAÇÃO:
-  1. Substitui o URL pelo Project URL do Supabase.
-  2. Usa a Publishable key ou a chave pública anon.
-  3. Substitui ADMIN_UID pelo UUID completo do utilizador administrador.
+  CONFIGURAÇÃO DO SUPABASE
+
+  A tabela swim_results deve ter uma coluna chamada club.
+  Os resultados deste site são filtrados para club = Sporting CP.
+
   Nunca coloques uma service_role ou secret key neste ficheiro público.
 */
+
 const SUPABASE_URL = 'https://dckkjlvobvxugnvawtcj.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_8IrDqplktlBsKAfSIrUm8w_WBgGIme1';
 const ADMIN_UID = 'f65a41f3-23c3-441c-b624-4725071a3831';
+
+const CLUB_NAME = 'Sporting CP';
 
 const $ = id => document.getElementById(id);
 const currentYear = new Date().getFullYear();
@@ -499,7 +647,9 @@ function labelKind(kind) {
 
 function formatDate(value) {
   if (!value) return '—';
+
   const parts = String(value).split('-');
+
   return parts.length === 3
     ? `${parts[2]}/${parts[1]}/${parts[0]}`
     : value;
@@ -522,8 +672,10 @@ function setStatus(message, type = '') {
 
 function setAuthUI() {
   const admin = isAdmin();
+
   $('addTop').hidden = !admin;
   $('loginBtn').textContent = admin ? 'Terminar sessão' : 'Iniciar sessão';
+
   render();
 }
 
@@ -561,8 +713,9 @@ function closeLoginModal() {
 }
 
 function populateYears() {
-  const years = [...new Set(results.map(r => String(r.season)).filter(Boolean))]
-    .sort((a, b) => Number(b) - Number(a));
+  const years = [...new Set(
+    results.map(r => String(r.season)).filter(Boolean)
+  )].sort((a, b) => Number(b) - Number(a));
 
   const select = $('year');
   const previous = select.value;
@@ -576,7 +729,9 @@ function populateYears() {
     select.appendChild(option);
   });
 
-  if (years.includes(previous)) select.value = previous;
+  if (years.includes(previous)) {
+    select.value = previous;
+  }
 }
 
 function render() {
@@ -601,7 +756,6 @@ function render() {
     return matchesKind && matchesSearch && matchesYear;
   });
 
-  // Esta parte preenche efetivamente a tabela com os resultados carregados.
   $('rows').innerHTML = filtered.map(r => `
     <tr>
       <td>
@@ -629,22 +783,18 @@ function render() {
   `).join('');
 
   $('empty').hidden = filtered.length > 0;
+
   $('resultCount').textContent =
     `${filtered.length} resultado${filtered.length === 1 ? '' : 's'}`;
 
   $('statCount').textContent = results.length;
   $('statOpen').textContent = results.filter(r => r.kind === 'open').length;
 
- 
   $('statPodium').textContent = results.filter(r => {
-    const position = String(
-      r.overall_place ?? r.place ?? ''
-    ).trim();
-  
-    // Aceita apenas classificações 1.º, 2.º ou 3.º lugar.
+    const position = String(r.overall_place ?? r.place ?? '').trim();
+
     return /^(?:1|2|3)(?:\.º|\.ª|º|ª|o|a)?(?:\s+ lugar)?$/i.test(position);
   }).length;
-
 
   const pool = results.filter(r =>
     r.kind === 'pool' && /50\s*m?\s*livres/i.test(r.distance || '')
@@ -660,36 +810,51 @@ function render() {
   $('goalBar').style.width = `${Math.min(100, results.length / 20 * 100)}%`;
 }
 
+/*
+  CARREGAR APENAS RESULTADOS DO SPORTING CP
+
+  A coluna club tem de existir na tabela swim_results.
+  O filtro ignora diferenças entre maiúsculas e minúsculas.
+*/
 async function loadResults() {
   if (!db) return;
 
-  setStatus('A carregar resultados…');
+  setStatus('A carregar resultados do Sporting CP…');
 
   const { data, error } = await db
     .from('swim_results')
     .select('*')
+    .ilike('club', '%Sporting CP%')
     .order('date', { ascending: false });
 
   if (error) {
     console.error('Erro ao carregar resultados:', error);
+
     setStatus(
-      'Não foi possível carregar os resultados. Confirma a tabela, as colunas e as políticas RLS no Supabase.',
+      'Não foi possível carregar os resultados. Confirma se a coluna club existe e se as políticas RLS permitem a leitura.',
       'error'
     );
+
+    results = [];
+    populateYears();
+    render();
     return;
   }
 
   results = data || [];
+
   populateYears();
   render();
-  setStatus('Resultados atualizados.', 'success');
+
+  setStatus('Resultados do Sporting CP atualizados.', 'success');
 }
 
 document.querySelectorAll('.tab').forEach(button => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(tab =>
-      tab.classList.toggle('active', tab === button)
-    );
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.classList.toggle('active', tab === button);
+    });
+
     activeKind = button.dataset.kind;
     render();
   });
@@ -757,22 +922,27 @@ $('loginForm').addEventListener('submit', async event => {
 
   if (data.user.id !== ADMIN_UID) {
     await db.auth.signOut();
+
     session = null;
     setAuthUI();
+
     setStatus('Esta conta não está autorizada como administradora.', 'error');
     closeLoginModal();
     return;
   }
 
   session = data.session;
+
   $('loginForm').reset();
   closeLoginModal();
   setAuthUI();
+
   setStatus('Sessão de administrador iniciada.', 'success');
+
   await loadResults();
 });
 
-// Um único listener para adicionar e editar resultados.
+// ADICIONAR E EDITAR RESULTADOS DO SPORTING CP
 $('resultForm').addEventListener('submit', async event => {
   event.preventDefault();
 
@@ -782,6 +952,7 @@ $('resultForm').addEventListener('submit', async event => {
   }
 
   const record = {
+    club: CLUB_NAME,
     kind: $('kind').value,
     distance: $('distance').value.trim(),
     meet: $('meet').value.trim(),
@@ -802,10 +973,12 @@ $('resultForm').addEventListener('submit', async event => {
     let response;
 
     if (wasEditing) {
+      // Impede que este site edite resultados de outros clubes.
       response = await db
         .from('swim_results')
         .update(record)
-        .eq('id', idToEdit);
+        .eq('id', idToEdit)
+        .ilike('club', '%Sporting CP%');
     } else {
       response = await db
         .from('swim_results')
@@ -818,13 +991,14 @@ $('resultForm').addEventListener('submit', async event => {
     await loadResults();
 
     setStatus(
-      wasEditing ? 'Resultado atualizado.' : 'Resultado adicionado.',
+      wasEditing ? 'Resultado atualizado.' : 'Resultado adicionado ao Sporting CP.',
       'success'
     );
   } catch (error) {
     console.error('Erro ao guardar resultado:', error);
+
     setStatus(
-      'Não foi possível guardar. Confirma as colunas da tabela e as políticas RLS no Supabase.',
+      'Não foi possível guardar. Confirma se a coluna club existe e se as políticas RLS permitem a operação.',
       'error'
     );
   } finally {
@@ -832,6 +1006,7 @@ $('resultForm').addEventListener('submit', async event => {
   }
 });
 
+// AÇÕES DE EDIÇÃO E ELIMINAÇÃO
 $('rows').addEventListener('click', async event => {
   const editButton = event.target.closest('[data-edit]');
   const deleteButton = event.target.closest('[data-delete]');
@@ -840,20 +1015,31 @@ $('rows').addEventListener('click', async event => {
 
   if (editButton) {
     const item = results.find(r => String(r.id) === editButton.dataset.edit);
-    if (item) openResultModal(item);
+
+    if (item && String(item.club || '').toLowerCase().includes('sporting cp')) {
+      openResultModal(item);
+    }
+
     return;
   }
 
   if (deleteButton) {
     const item = results.find(r => String(r.id) === deleteButton.dataset.delete);
+
     if (!item) return;
+
+    if (!String(item.club || '').toLowerCase().includes('sporting cp')) {
+      setStatus('Só podes apagar resultados do Sporting CP neste site.', 'error');
+      return;
+    }
 
     if (!confirm(`Queres apagar "${item.distance}" — ${item.meet}?`)) return;
 
     const { error } = await db
       .from('swim_results')
       .delete()
-      .eq('id', item.id);
+      .eq('id', item.id)
+      .ilike('club', '%Sporting CP%');
 
     if (error) {
       console.error('Erro ao apagar resultado:', error);
@@ -862,19 +1048,29 @@ $('rows').addEventListener('click', async event => {
     }
 
     await loadResults();
-    setStatus('Resultado apagado.', 'success');
+    setStatus('Resultado do Sporting CP apagado.', 'success');
   }
 });
 
+// EXPORTAR OS RESULTADOS DO SPORTING CP PARA CSV
 $('export').addEventListener('click', () => {
   const headings = [
-    'Disciplina', 'Prova', 'Competição', 'Data', 'Marca',
-    'Classificação geral', 'Escalão', 'Classificação no escalão', 'Ano'
+    'Clube',
+    'Disciplina',
+    'Prova',
+    'Competição',
+    'Data',
+    'Marca',
+    'Classificação geral',
+    'Escalão',
+    'Classificação no escalão',
+    'Ano'
   ];
 
   const data = [
     headings,
     ...results.map(r => [
+      r.club || CLUB_NAME,
       labelKind(r.kind),
       r.distance,
       r.meet,
@@ -896,10 +1092,12 @@ $('export').addEventListener('click', () => {
   const link = document.createElement('a');
 
   link.href = url;
-  link.download = 'resultados-natacao.csv';
+  link.download = 'resultados-sporting-cp.csv';
+
   document.body.appendChild(link);
   link.click();
   link.remove();
+
   URL.revokeObjectURL(url);
 });
 
@@ -911,6 +1109,7 @@ async function init() {
       'Falta configurar o URL, a chave pública e o UUID completo no início do código.',
       'error'
     );
+
     $('empty').hidden = false;
     $('empty').textContent = 'Configura o Supabase para carregar os resultados.';
     $('loginBtn').disabled = true;
@@ -929,6 +1128,7 @@ async function init() {
     db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const { data, error } = await db.auth.getSession();
+
     if (error) throw error;
 
     session = data.session;
@@ -936,6 +1136,7 @@ async function init() {
     db.auth.onAuthStateChange((_event, newSession) => {
       session = newSession;
       setAuthUI();
+
       if (db) loadResults();
     });
 
@@ -943,6 +1144,7 @@ async function init() {
     await loadResults();
   } catch (error) {
     console.error('Erro de inicialização:', error);
+
     setStatus(
       'Erro de ligação ao Supabase. Confirma o URL, a chave e as configurações.',
       'error'
@@ -954,4 +1156,3 @@ init();
 </script>
 </body>
 </html>
-
